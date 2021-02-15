@@ -1,0 +1,32 @@
+name: Discord Webhook Action
+description: Send the job status to Discord
+branding:
+  color: purple
+  icon: message-square
+inputs:
+  webhook-url:
+    description: Discord Webhook URL
+    required: true
+  lang-name:
+    description: Repo language name
+    required: false
+    default: ""
+  lang-version:
+    description: Repo language version
+    required: false
+    default: ""
+  run-suffix:
+    description: Run number suffix
+    required: false
+    default: ""
+runs:
+  using: composite
+  steps:
+    - run: $GITHUB_ACTION_PATH/action.sh
+      shell: bash
+      env:
+        JOB_STATUS: ${{job.status}}
+        LANG_NAME: ${{inputs.lang-name}}
+        LANG_VERSION: ${{inputs.lang-version}}
+        RUN_SUFFIX: ${{inputs.run-suffix}}
+        WEBHOOK_URL: ${{inputs.webhook-url}}
