@@ -19,6 +19,8 @@ COMMIT_MESSAGE="$(git -C "$GITHUB_WORKSPACE" \
 COMMITTER_NAME="$(git -C "$GITHUB_WORKSPACE" \
                   log -1 "$GITHUB_SHA" --pretty='%cN')"
 
+: "${COMMIT_MESSAGE//$'\r'/}"; COMMIT_MESSAGE="${_//$'\n'/$'\\n'}"
+
 ACTION_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
 
 AVATAR="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
@@ -27,7 +29,7 @@ WEBHOOK_DATA=$'{
   "username": "GitHub",
   "avatar_url": "'$AVATAR'",
   "embeds": [{
-    "color": "'${STATUS_COLOR:-$((0xFFFFFF))}'",
+    "color": '${STATUS_COLOR:-$((0xFFFFFF))}',
     "author": {
       "name": "'$GITHUB_REPOSITORY' #'$GITHUB_RUN_NUMBER$RUN_SUFFIX'",
       "url": "'$ACTION_URL'",
@@ -35,7 +37,7 @@ WEBHOOK_DATA=$'{
     },
     "title": "'$COMMIT_SUBJECT'",
     "url": "'$REPO_URL'",
-    "description": "'${COMMIT_MESSAGE//$'\n'/$'\\n'}'",
+    "description": "'$COMMIT_MESSAGE'",
     "footer": {
       "text": "'$COMMITTER_NAME'",
       "icon_url": "'$GITHUB_SERVER_URL/$COMMITTER_NAME'.png?s=40"
