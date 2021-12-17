@@ -19,7 +19,7 @@ COMMIT_MESSAGE="$(git -C "$GITHUB_WORKSPACE" \
 COMMITTER_NAME="$(git -C "$GITHUB_WORKSPACE" \
                   log -1 "$GITHUB_SHA" --pretty='%cN')"
 
-: "${COMMIT_MESSAGE//$'\r'/}"; COMMIT_MESSAGE="${_//$'\n'/$'\\n'}"
+: "${COMMIT_MESSAGE//$'\r'/}"; : "${_//\"/\\\"}"; COMMIT_MESSAGE="${_//$'\n'/$'\\n'}"
 
 ACTION_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
 
