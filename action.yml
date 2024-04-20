@@ -10,15 +10,12 @@ inputs:
   lang-name:
     description: Repo language name
     required: false
-    default: ""
   lang-version:
     description: Repo language version
     required: false
-    default: ""
   run-suffix:
     description: Run number suffix
     required: false
-    default: ""
 runs:
   using: composite
   steps:

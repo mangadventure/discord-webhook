@@ -1,11 +1,10 @@
-Discord webhook action
-----------------------
+= Discord webhook action
 
 [source,yaml]
 -------------
 - name: Send status to Discord
   uses: mangadventure/discord-webhook@v0.1
-  if: ${{always()}}
+  if: always()
   with:
     webhook-url: ${{secrets.WEBHOOK_URL}} # required
     lang-name: Python # optional, default: Bash
