@@ -1,12 +1,10 @@
-#!/bin/bash
-
-set -o pipefail
+#!/bin/sh
 
 case "$JOB_STATUS" in
   success) STATUS_COLOR=$((0x448844)) ;;
   failure) STATUS_COLOR=$((0xD82828)) ;;
   cancelled) STATUS_COLOR=$((0x606060)) ;;
-  *) printf '[WARN] Unknown status "%s"\n' "$JOB_STATUS"
+  *) printf '::warning::Unknown status "%s"\n' "$JOB_STATUS"
 esac
 
 REPO_BRANCH="${GITHUB_BASE_REF:-$GITHUB_REF_NAME}"
@@ -23,7 +21,8 @@ AVATAR="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.pn
 
 export AVATAR ACTION_URL COMMIT_SUBJECT REPO_URL COMMIT_MESSAGE COMMITTER_NAME JOB_STATUS
 
-WEBHOOK_DATA=$'{
+# shellcheck disable=SC2016
+WEBHOOK_DATA='{
   username: "GitHub",
   avatar: $ENV.AVATAR,
   embeds: [{
@@ -59,7 +58,7 @@ WEBHOOK_DATA=$'{
 
 SELF_URL='https://github.com/mangadventure/discord-webhook'
 
-printf '[INFO] Sending webhook to Discord...\n'
+printf 'Sending webhook to Discord...\n'
 jq -Mn "$WEBHOOK_DATA" \
   --arg color "${STATUS_COLOR:-$((0xFFFFFF))}" \
   --arg author "$GITHUB_REPOSITORY #$GITHUB_RUN_NUMBER$RUN_SUFFIX" \
@@ -69,11 +68,11 @@ jq -Mn "$WEBHOOK_DATA" \
   --arg lang_version "${LANG_VERSION:-$BASH_VERSION}" \
   --arg date "$(date --utc +%FT%TZ)" \
   | curl "$WEBHOOK_URL" -H 'Content-Type: application/json' \
-     -Ssf -d@- -A "Discord-Webhook ($SELF_URL, v0.5)"
+     -Ssf -d@- -A "Discord-Webhook ($SELF_URL, v0.6)"
 ecode=$?
-if ((ecode == 0)); then
-  printf '[INFO] Successfully sent the webhook.\n'
+if [ $ecode -eq 0 ]; then
+  printf 'Successfully sent the webhook.\n'
 else
-  printf '[ERROR] Failed to send the webhook.\n'
+  printf '::error::Failed to send the webhook.\n'
   exit $ecode
 fi

@@ -17,13 +17,11 @@ inputs:
     description: Run number suffix
     required: false
 runs:
-  using: composite
-  steps:
-    - run: $GITHUB_ACTION_PATH/action.sh
-      shell: bash
-      env:
-        JOB_STATUS: ${{job.status}}
-        LANG_NAME: ${{inputs.lang-name}}
-        LANG_VERSION: ${{inputs.lang-version}}
-        RUN_SUFFIX: ${{inputs.run-suffix}}
-        WEBHOOK_URL: ${{inputs.webhook-url}}
+  using: docker
+  image: badouralix/curl-jq:alpine
+  env:
+    JOB_STATUS: ${{job.status}}
+    LANG_NAME: ${{inputs.lang-name}}
+    LANG_VERSION: ${{inputs.lang-version}}
+    RUN_SUFFIX: ${{inputs.run-suffix}}
+    WEBHOOK_URL: ${{inputs.webhook-url}}
